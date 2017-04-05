@@ -1,0 +1,16 @@
+---
+- name: Test powershelling with Runner
+  hosts: all
+  tasks:
+    - name: Push a powershell script
+      win_copy:
+        src: test.ps1
+        dest: c:\test.ps1
+
+    - name: Run script
+      win_shell: c:\test.ps1
+      register: response
+
+    - name: Show output of script
+      debug:
+        msg: "{{ response }}"

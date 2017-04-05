@@ -1,0 +1,32 @@
+---
+- name: Add add a host
+  connection: local
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Add a single windows host
+      add_host:
+        name=CA3WFTIWINTST01
+        ansible_ssh_host=10.103.32.13
+        ansible_ssh_user=administrator
+        ansible_ssh_port=5986
+        ansible_ssh_pass={{ password }}
+        ansible_connection=winrm
+        ansible_winrm_server_cert_validation=ignore
+        groupname=windows
+
+- name: Test powershelling with Runner
+  hosts: windows
+  tasks:
+    - name: Push a powershell script
+      win_copy:
+        src: test.ps1
+        dest: c:\test.ps1
+
+    - name: Run script
+      win_shell: c:\test.ps1
+      register: response
+
+    - name: Show output of script
+      debug:
+        msg: "{{ response }}"
